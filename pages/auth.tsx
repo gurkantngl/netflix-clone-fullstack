@@ -105,10 +105,10 @@ const auth=()=> {
                                      </button>
 
                         <div className='flex flex-row items-center gap-4 mt-10 justify-center'>
-                            <div className='bg-white flex w-10 h-10 rounded-full items-center text-center justify-center cursor-pointer'>   
+                            <div onClick={()=>signIn('google', {callbackUrl:'/profiles'})} className='bg-white flex w-10 h-10 rounded-full items-center text-center justify-center cursor-pointer'>   
                                 <FcGoogle size={35}/>
                             </div>
-                            <div className='bg-white flex w-10 h-10 rounded-full items-center text-center justify-center cursor-pointer'>   
+                            <div onClick={()=>signIn('github', {callbackUrl: '/profiles'})} className='bg-white flex w-10 h-10 rounded-full items-center text-center justify-center cursor-pointer'>   
                                 <FaGithub size={35}/>
                             </div>
                         </div>
