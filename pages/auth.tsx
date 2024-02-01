@@ -3,8 +3,27 @@ import Input from '@/components/input'
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useRouter } from 'next/router';
+import { getSession, signIn } from 'next-auth/react';
+import axios from 'axios';
+import { NextPageContext } from 'next';
 
-function auth() {
+export async function getServerSideProps(context: NextPageContext) {
+    const session = await getSession(context);
+
+    if (session){
+        return {
+            redirect:{
+                destination:'/',
+                permanent:false
+            }
+        }
+    }
+    return {
+        props:{}
+    }
+}
+
+const auth=()=> {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -17,19 +36,32 @@ function auth() {
 
     const login = useCallback(async()=>{
         try{
-            console.log("login")
+            await signIn('credentials', {
+                email,
+                password,
+                redirect:false,
+                callbackUrl:'/'
+            });
+            router.push('/profiles');
         }catch(error){
-
+            console.log(error);
         }
-    },[])
+    },[email, password, router])
 
     const register = useCallback(async()=>{
         try{
-            console.log("register")
-        }catch(error){
+            await axios.post('/api/register', {
+                email,
+                name,
+                password
+            });
+            
+            login();
 
+        }catch(error){
+            console.log(error);
         }
-    },[])
+    }, [email, name, password, login]);
 
     return (
         <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-cover">
